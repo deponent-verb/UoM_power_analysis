@@ -5,7 +5,8 @@
 #' they have the disease (1) or not (0). The predictors are the month(high or low), city (categorical)
 #',community(categorical) and intervention (yes or no). We assume that each individual observation
 #' is conditionally independent, given we know all these other predictors. Note that the effects
-#' of each predictor apply a modifier to the probabilit that an individual gets infected. 
+#' of each predictor apply additively to the probability that an individual gets infected. The exception
+#' is the intervention effect which acts multiplicatively. 
 #'
 #' @param seasonal_eff: A  list of vectors containing the shape1 and shape2 parameters for the Beta
 #' distribution. This represents seasonal effects which are ~Beta(shape1,shape2).
@@ -22,7 +23,7 @@
 #'
 #' @examples 
 pandemic_sim <- function(seasonal_eff, city_eff, community_eff, intervention_eff, num_ppl){
-
+  
   sim_list = list()
   sim_count = 1
   
@@ -44,7 +45,7 @@ pandemic_sim <- function(seasonal_eff, city_eff, community_eff, intervention_eff
           eff_int = rbeta(n = 1, shape1 = dist_int$shape1, shape2 = dist_int$shape2)
           
           #add effects and make tibble for one individual
-          eff_total = eff_m + eff_c + eff_com + eff_int
+          eff_total = (eff_m + eff_c + eff_com) * eff_int
           
           #simulate individuals by generating a small tibble for each one
           for(ppl in 1:num_ppl){
@@ -68,5 +69,9 @@ pandemic_sim <- function(seasonal_eff, city_eff, community_eff, intervention_eff
   }
   
   df = data.table::rbindlist(sim_list)
+  df = as.data.frame(df)
+  df[colnames(df)] <- lapply(df[colnames(df)],factor)
+  #pandemic_data[colnames(pandemic_data)] <- lapply(pandemic_data[colnames(pandemic_data)], factor)
+  
   return(df)
 }
