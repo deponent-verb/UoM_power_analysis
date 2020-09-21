@@ -6,10 +6,10 @@ library(tidyverse)
 
 #Set up random effects
 
-seasonal_eff <- tibble::tibble(name=c("high","low"),shape1=c(0.25,0.2),shape2=c(0.06,0.4))
-city_eff <- tibble::tibble(name = c("city_a", "city_b"), shape1=c(0.2,0.2),shape2=c(0.3,0.2))
-community_eff <- tibble::tibble(name = c("com_a", "com_b"), shape1=c(0.1,0.2),shape2=c(0.3,0.2))
-intervention_eff <- tibble::tibble(name = c("yes","no"), shape1=c(0.25,0.2),shape2=c(0,0.2))
+seasonal_eff <- tibble::tibble(name=c("high","low"),shape1=c(1,1),shape2=c(3,15.67))
+city_eff <- tibble::tibble(name = c("city_a", "city_b"), shape1=c(1,1),shape2=c(8,20))
+community_eff <- tibble::tibble(name = c("com_a", "com_b"), shape1=c(1,1),shape2=c(3,50))
+#intervention_eff <- tibble::tibble(name = c("yes","no"), shape1=c(0.25,0.2),shape2=c(0,0.2))
 
 #set the number of datasets to generate and fit models upon
 repetitions = 10
