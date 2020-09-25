@@ -8,14 +8,13 @@
 #' of each predictor apply additively to the probability that an individual gets infected. The exception
 #' is the intervention effect which acts multiplicatively. 
 #'
-#' @param seasonal_eff: A  list of vectors containing the shape1 and shape2 parameters for the Beta
-#' distribution. This represents seasonal effects which are ~Beta(shape1,shape2).
-#' @param city_eff A  list of vectors containing the shape1 and shape2 parameters for the Beta
-#' distribution. This represents city effects which are ~Beta(shape1,shape2).
-#' @param community_eff A  list of vectors containing the shape1 and shape2 parameters for the Beta
-#' distribution. This represents community effects which are ~Beta(shape1,shape2).
-#' @param intervention_eff A  list of vectors containing the shape1 and shape2 parameters for the Beta
-#' distribution. This represents intervention effects which are ~Beta(shape1,shape2).
+#' @param seasonal_eff: A  tibble of vectors containing the shape1 and shape2 parameters for the Beta
+#' distribution. This represents seasonal effects which are ~Beta(shape1,shape2). Name each class. 
+#' @param city_eff A  tibble of vectors containing the shape1 and shape2 parameters for the Beta
+#' distribution. This represents city effects which are ~Beta(shape1,shape2).Name each class.
+#' @param community_eff A  tibble of vectors containing the shape1 and shape2 parameters for the Beta
+#' distribution. This represents community effects which are ~Beta(shape1,shape2).Name each class.
+#' @param intervention_eff A tibble of floats which modify the infection probability multiplicatively.Name each class.
 #' @param num_ppl Number of individuals to simulate for each combination of predictors 
 #'
 #' @return a dataframe with columns disease(response) and predictors (month, city, community, intervention)
@@ -42,7 +41,10 @@ pandemic_sim <- function(seasonal_eff, city_eff, community_eff, intervention_eff
         #loop over intervention effects
         for(i in 1:nrow(intervention_eff)){
           dist_int = intervention_eff[i,]
-          eff_int = rbeta(n = 1, shape1 = dist_int$shape1, shape2 = dist_int$shape2)
+          #eff_int = rbeta(n = 1, shape1 = dist_int$shape1, shape2 = dist_int$shape2)
+          
+          #trying out fixed intervention effects as that is more intuitive
+          eff_int = dist_int$value
           
           #add effects and make tibble for one individual
           eff_total = (eff_m + eff_c + eff_com) * eff_int
