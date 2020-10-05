@@ -3,7 +3,13 @@
 library(lme4)
 library(lmerTest)
 
-#Set study size. I have constrained these to certain values because of practicalisties of the study. "Treating" a community takes 2 months, and the project is 30 months. So, we can sample at time 0, and then every 6 months (6 total samples), every 3 months (11 total samples), or every 2 months (16 total samples). Because we can treat a commnity every two months and the study will take 30 months, the number of communities treates will be a multiple of 15.
+#Set study size. I have constrained these to certain values because of practicalisties 
+#of the study. "Treating" a community takes 2 months, and the project is 30 months. 
+#So, we can sample at time 0, and then every 6 months (6 total samples), 
+#every 3 months (11 total samples), or every 2 months (16 total samples).
+#Because we can treat a commnity every two months and the study will take 30 months, 
+#the number of communities treates will be a multiple of 15.
+
 eff.size=0.25 #anticipated effect size
 s=3  #number of settlements (3 or 5)
 c=10  #number of communities (5 or 10 if s=3; 3 or 6 if s=5)
@@ -26,7 +32,16 @@ for (i in 1:4){
   pred[,i]=as.factor(pred[,i])  #converts predictors to factors (so R treats community ID as class rather than a number)
 }
 
-#Assign expectations. This is the key to our analysis, since our assumptions about variability determine our predicted power. First, I think the infection rates that we have are for clinic visitors, not for the population as a whole. So, I have (arbitrarily) divided by 10. I got the variation among years from the last 10 years of UK flu data at the national level. Variation among settlements matches variation among the 6 largest UK cities in COVID death rates at spring peak. Variation among communities matches variation among boroughs within Manchester and within London in COVID death rates at spring peaks. These may overestimate, because some of this variance will be due to variation between the true and expected death rates due to small sample sizes. This is fine, because overestiamting variability will make our analysis conservative.
+#Assign expectations. This is the key to our analysis, since our assumptions about 
+# variability determine our predicted power. First, I think the infection rates that we 
+# have are for clinic visitors, not for the population as a whole. So, I have 
+# (arbitrarily) divided by 10. I got the variation among years from the last 10 years 
+# of UK flu data at the national level. Variation among settlements matches variation 
+# among the 6 largest UK cities in COVID death rates at spring peak. Variation among 
+# communities matches variation among boroughs within Manchester and within London in 
+# COVID death rates at spring peaks. These may overestimate, because some of this variance
+# will be due to variation between the true and expected death rates due to small sample
+# sizes. This is fine, because overestiamting variability will make our analysis conservative.
 
 hs=0.025#/10  #high season in population
 ls=0.006#6/10  #low season in population
@@ -42,13 +57,13 @@ plot(dbeta((0:100)/100,a.hs,b.hs))
 #create a loop to simulate data and fit models
 
 
-samples=100
+samples=10
 ps=NULL
 for (i in 1:samples){
 
   print(i) #to track progress
   
-#baseline expectation for infection rates in each time step
+#baseline expectation for infection rates in each time step, first 4 months is hs
 expect.t=(hs-ls)*((sp%%12)<4)+ls
 #expectation with randomness for seasons
 expect.t.r=rbeta(length(expect.t),shape1=(1-(1+cv.t^2)*expect.t)/(cv.t^2),shape2=(expect.t-1)*(expect.t-1+expect.t*cv.t^2)/(expect.t*cv.t^2))
@@ -61,7 +76,8 @@ expect.s.r[which(expect.s.r>.5)]=.5 #sloppy approach to avoiding NAs for high in
 expect.c=rep(expect.s.r,each=c)
 expect.c.r=rbeta(length(expect.c),shape1=(1-(1+cv.c^2)*expect.c)/(cv.c^2),shape2=(expect.c-1)*(expect.c-1+expect.c*cv.c^2)/(expect.c*cv.c^2))
 
-#attach these to the predictor matrix, impose treatment, and expand to sample
+#attach these to the predictor matrix, impose treatment, and expand to sample 
+#(modify infection rate by intervention effect)
 pred$expect=expect.c.r*(1-pred$treated*eff.size)
 
 #sample n individuals from each community
