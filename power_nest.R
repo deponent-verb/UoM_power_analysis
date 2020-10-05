@@ -8,7 +8,7 @@ library(lmerTest)
 #So, we can sample at time 0, and then every 6 months (6 total samples), 
 #every 3 months (11 total samples), or every 2 months (16 total samples).
 #Because we can treat a commnity every two months and the study will take 30 months, 
-#the number of communities treates will be a multiple of 15.
+#the number of communities treated will be a multiple of 15.
 
 eff.size=0.25 #anticipated effect size
 s=3  #number of settlements (3 or 5)
@@ -28,6 +28,7 @@ pred$id=paste(pred[,2],pred[,3],sep=".")
 pred$treated=1*(sched[match(pred$id,sched$id),3]<=pred[,1])  #indicates whether the community has been treated at a given time point
 pred$month=pred$time.point%%12
 pred$hs=1*(pred$month<4)  #indicates whether we are in the high flu season
+
 for (i in 1:4){
   pred[,i]=as.factor(pred[,i])  #converts predictors to factors (so R treats community ID as class rather than a number)
 }
