@@ -16,7 +16,7 @@
 #' @return The power of a random mixed effects model for detecting the intervention.
 #' @export
 #'
-#' @examples
+#' @examples pandemic_pwr_calc(nruns = 10,nsam = 10,eff.size = 0.25,num_set = 3,num_com = 10,ntp = 11,sig.alpha = 0.05)
 pandemic_pwr_calc <- function (nruns, nsam, eff.size, num_set, num_com, ntp, sig.alpha){
   
   s=num_set  #number of settlements (3 or 5)

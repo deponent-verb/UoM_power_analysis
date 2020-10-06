@@ -1,6 +1,14 @@
 #load in simulation function
-source("./pandemic_sim.R")
-source("./power_calc.R")
+source("./pandemic_pwr_calc.R")
+
+pacman::p_load(lme4,lmerTest)
+
+N = c(50,200)
+
+pwr = lapply(N, pandemic_pwr_calc, nruns = 100,eff.size = 0.25,num_set = 3,
+       num_com = 5,ntp = 6,sig.alpha = 0.05 )
+
+#ignore below ----
 
 #load in packages
 library(tidyverse)
