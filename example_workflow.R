@@ -4,9 +4,12 @@ source("./pandemic_pwr_calc.R")
 pacman::p_load(lme4,lmerTest)
 
 N = c(50,200)
+hs=0.025#/10  #high season in population
+ls=0.006#6/10  #low season in population
+cv.t=0.75 #coefficient of variation for seasons (UK surveillance data)
 
 pwr = lapply(N, pandemic_pwr_calc, nruns = 100,eff.size = 0.25,num_set = 3,
-       num_com = 5,ntp = 6,sig.alpha = 0.05 )
+       num_com = 5,ntp = 6,sig.alpha = 0.05, hs = hs, ls = ls ,cv.t = cv.t )
 
 #ignore below ----
 

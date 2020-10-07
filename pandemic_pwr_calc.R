@@ -12,13 +12,18 @@
 #' @param num_com : Number of communities. (5 or 10 if s=3; 3 or 6 if s=5)
 #' @param ntp : Number of timepoints to take samples. (6, 11, 16)
 #' @param sig.alpha : Significance level of the test
+#' @param hs: coefficient for high season effect
+#' @param ls: coefficient for low season effect
+#' @param cv.t: coefficient of variation for seasons 
 #'
 #' @return The power of a random mixed effects model for detecting the intervention.
 #' @export
 #'
 #' @examples pandemic_pwr_calc(nruns = 10,nsam = 10,eff.size = 0.25,num_set = 3,num_com = 10,ntp = 11,sig.alpha = 0.05)
-pandemic_pwr_calc <- function (nruns, nsam, eff.size, num_set, num_com, ntp, sig.alpha){
-  
+pandemic_pwr_calc <- function (nruns, nsam, eff.size, num_set, 
+                               num_com, ntp, sig.alpha,
+                               hs, ls, cv.t){
+
   s=num_set  #number of settlements (3 or 5)
   c=num_com  #number of communities (5 or 10 if s=3; 3 or 6 if s=5)
   
@@ -52,9 +57,6 @@ pandemic_pwr_calc <- function (nruns, nsam, eff.size, num_set, num_com, ntp, sig
   # will be due to variation between the true and expected death rates due to small sample
   # sizes. This is fine, because overestiamting variability will make our analysis conservative.
   
-  hs=0.025#/10  #high season in population
-  ls=0.006#6/10  #low season in population
-  cv.t=0.75 #coefficient of variation for seasons (UK surveillance data)
   cv.s=0.25 #coefficient of variation for settlements (UK cities)
   cv.c=0.35 #coefficient of variation for communities  (Manchester and London weeks 14-20)
   
@@ -100,5 +102,6 @@ pandemic_pwr_calc <- function (nruns, nsam, eff.size, num_set, num_com, ntp, sig
     }
   }
   power = sum(ps<sig.alpha)/length(ps)
-  return(power)
+  df = tibble::tibble(hs = hs, ls = ls, season_var = cv.t, sig = sig.alpha, power = power)
+  return(df)
 }
