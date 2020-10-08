@@ -33,7 +33,7 @@ pwr_df = foreach(n = 1:length(N)) %:%
 
     .libPaths(libs)
     library(lme4)
-    pandemic_pwr_calc(nsam = N[n], nruns = 2,eff.size = 0.25,num_set = 3,
+    pandemic_pwr_calc(nsam = N[n], nruns = 100,eff.size = 0.25,num_set = 3,
                       num_com = 5,ntp = ntp[tps],sig.alpha = 0.05,hs = hs[h],
                       ls = ls[l],cv.t = cv.t[svar])
   }

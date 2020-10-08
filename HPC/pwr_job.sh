@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH -p test        	                                # partition (this is the queue your job will be added to) 
 #SBATCH -N 1               	                                # number of nodes (no MPI, so we only use a single node)
-#SBATCH -n 8              	                                # number of cores
-#SBATCH --time=1:00:00    	                                # walltime allocation, which has the format (D-HH:MM:SS), here set to 1 hour
+#SBATCH -n 20              	                                # number of cores
+#SBATCH --time=6:00:00    	                                # walltime allocation, which has the format (D-HH:MM:SS), here set to 1 hour
 #SBATCH --mem=5GB         	                                # memory required per node (here set to 4 GB)
 
 # Notification configuration 
