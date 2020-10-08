@@ -1,7 +1,8 @@
 .libPaths(c("/fast/users/a1708050/local/RLibs",.libPaths()))
 libs = .libPaths(c("/fast/users/a1708050/local/RLibs",.libPaths()))
 
-library(doParallel)
+library("doParallel")
+library("doSNOW")
 
 slurm_ntasks <- as.numeric(Sys.getenv("SLURM_NTASKS")) # Obtain environment variable SLURM_NTASKS
 if (is.numeric(slurm_ntasks)) {
