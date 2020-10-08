@@ -102,6 +102,8 @@ pandemic_pwr_calc <- function (nruns, nsam, eff.size, num_set,
     }
   }
   power = sum(ps<sig.alpha)/length(ps)
-  df = tibble::tibble(hs = hs, ls = ls, season_var = cv.t, sig = sig.alpha, sample_freq = ntp , power = power)
+  df = tibble::tibble(hs = hs, ls = ls, season_var = cv.t, 
+                      sig = sig.alpha, sample_freq = ntp , 
+                      nsam=nsam,power = power)
   return(df)
 }
