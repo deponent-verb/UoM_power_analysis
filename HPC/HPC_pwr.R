@@ -45,5 +45,5 @@ for(i in 1:4){
 }
 
 df=data.table::rbindlist(temp)
-readr::write_csv(df,path="/fast/users/a1708050/mphil/UoM/UoM_power_analysis/power_df.csv")
+readr::write_csv(df,path="/fast/users/a1708050/mphil/UoM/power_df.csv")
 
