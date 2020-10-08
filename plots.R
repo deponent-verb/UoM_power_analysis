@@ -10,4 +10,4 @@ hr_df <- pwr_df %>%
 
 ggplot( hr_df, aes(x = nsam, y = power, color=season_var)) +
   geom_point() + 
-  facet_grid("sample_freq")
+  facet_grid("sample_freq") 
