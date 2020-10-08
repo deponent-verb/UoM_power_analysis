@@ -89,7 +89,7 @@ pandemic_pwr_calc <- function (nruns, nsam, eff.size, num_set,
     pred.long$infect=1*(runif(nrow(pred.long))<pred.long$expect)
     
     #try to fit the model to the data
-    r.glmer=glmer(infect~treated+hs+(1|time.point)+(1|time.point:settlement)+(1|time.point:settlement:community),data=pred.long,family="binomial",control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+    r.glmer=lme4::glmer(infect~treated+hs+(1|time.point)+(1|time.point:settlement)+(1|time.point:settlement:community),data=pred.long,family="binomial",control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
     
     #store the p-value for the fitted model
     p_val = summary(r.glmer)[10][[1]][2,4]
@@ -102,6 +102,6 @@ pandemic_pwr_calc <- function (nruns, nsam, eff.size, num_set,
     }
   }
   power = sum(ps<sig.alpha)/length(ps)
-  df = tibble::tibble(hs = hs, ls = ls, season_var = cv.t, sig = sig.alpha, power = power)
+  df = tibble::tibble(hs = hs, ls = ls, season_var = cv.t, sig = sig.alpha, sample_freq = ntp , power = power)
   return(df)
 }

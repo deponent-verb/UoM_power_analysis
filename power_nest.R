@@ -55,6 +55,8 @@ a.hs=(1-(1+cv.t^2)*hs)/(cv.t^2)
 b.hs=(hs-1)*(hs-1+hs*cv.t^2)/(hs*cv.t^2)
 plot(dbeta((0:100)/100,a.hs,b.hs))
 
+cv.t = 1.25
+
 #create a loop to simulate data and fit models
 
 

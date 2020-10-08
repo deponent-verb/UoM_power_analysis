@@ -3,13 +3,42 @@ source("./pandemic_pwr_calc.R")
 
 pacman::p_load(lme4,lmerTest)
 
-N = c(50,200)
-hs=0.025#/10  #high season in population
-ls=0.006#6/10  #low season in population
-cv.t=0.75 #coefficient of variation for seasons (UK surveillance data)
+N = seq(50,250,by=50)
+#N = c(5,10)
+hs = c(0.021, 0.21)
+ls = c(0.006, 0.06)
+cv.t = c(0.75,1,1.25) #coefficient of variation for seasons (UK surveillance data)
+ntp = c(6,11,16)
 
 pwr = lapply(N, pandemic_pwr_calc, nruns = 100,eff.size = 0.25,num_set = 3,
        num_com = 5,ntp = 6,sig.alpha = 0.05, hs = hs, ls = ls ,cv.t = cv.t )
+
+library(doParallel)
+cl <- makeCluster(4)
+registerDoParallel(cl)
+foreach(i=1:3) %dopar% sqrt(i)
+
+start = Sys.time()
+pwr_df = foreach(n = 1:length(N)) %:%
+  foreach(tps =1:length(ntp)) %:%
+  foreach(svar = 1:length(cv.t)) %:%
+  foreach(h = 1:length(hs)) %:%
+  foreach(l = 1:length(ls)) %dopar% {
+    #N[n]+hs[h]+ls[l]
+    library(lme4)
+    pandemic_pwr_calc(nsam = N[n], nruns = 10,eff.size = 0.25,num_set = 3,
+                      num_com = 5,ntp = ntp[tps],sig.alpha = 0.05,hs = hs[h],
+                      ls = ls[l],cv.t = cv.t[svar])
+  }
+end = Sys.time()
+
+temp = pwr_df
+
+for(i in 1:4){
+  temp = unlist(temp,recursive = F)
+}
+
+df=data.table::rbindlist(temp)
 
 #ignore below ----
 
